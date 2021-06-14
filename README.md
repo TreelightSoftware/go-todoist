@@ -1,2 +1,3 @@
-# go-todoist
-A simple Todoist REST API Client
+# Todist API
+
+A simple unofficial Todoist REST API Client
