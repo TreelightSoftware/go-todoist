@@ -81,19 +81,104 @@ func makeCall(token string, endpointName string, pathParams map[string]string, d
 		// body is a string, but we need to flag an error
 		err = fmt.Errorf(strings.TrimRight(string(resp.Body()), "\n"))
 	}
-
 	result.Body = resp.Body()
 	return result, err
 }
 
 const (
-	EndpointNameGetProjects = "GetProjects"
+	// projects
+
+	EndpointNameGetProjects   = "GetProjects"
+	EndpointNameCreateProject = "CreateProject"
+	EndpointNameDeleteProject = "DeleteProject"
+	EndpointNameGetProject    = "GetProject"
+	EndpointNameUpdateProject = "UpdateProject"
+
+	// tasks
+
+	EndpointNameGetAllActiveTasks = "GetTasks"
+	EndpointNameCreateTask        = "CreateTask"
+	EndpointNameGetTask           = "GetTask"
+	EndpointNameDeleteTask        = "DeleteTask"
+	EndpointNameUpdateTask        = "UpdateTask"
+	EndpointNameCloseTask         = "CloseTask"
+	EndpointNameReopenTask        = "ReopenTask"
 )
 
+// the endpoints that we implement are stored here for easier reference in the actual calls
 var endpoints = map[string]endpoint{
+	// projects
 	EndpointNameGetProjects: {
 		Path:       "/projects",
 		PathParams: map[string]string{},
 		Method:     http.MethodGet,
+	},
+	EndpointNameCreateProject: {
+		Path:       "/projects",
+		PathParams: map[string]string{},
+		Method:     http.MethodPost,
+	},
+	EndpointNameGetProject: {
+		Path: "/projects/:id",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodGet,
+	},
+	EndpointNameUpdateProject: {
+		Path: "/projects/:id",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodPost,
+	},
+	EndpointNameDeleteProject: {
+		Path: "/projects/:id",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodDelete,
+	},
+
+	// tasks
+	EndpointNameGetAllActiveTasks: {
+		Path:       "/tasks",
+		PathParams: map[string]string{},
+		Method:     http.MethodGet,
+	},
+	EndpointNameGetTask: {
+		Path: "/tasks/:id",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodGet,
+	},
+	EndpointNameDeleteTask: {
+		Path: "/tasks/:id",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodDelete,
+	},
+	EndpointNameUpdateTask: {
+		Path: "/tasks/:id",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodPost,
+	},
+	EndpointNameCloseTask: {
+		Path: "/tasks/:id/close",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodPost,
+	},
+	EndpointNameReopenTask: {
+		Path: "/tasks/:id/close",
+		PathParams: map[string]string{
+			"id": "The task id",
+		},
+		Method: http.MethodPost,
 	},
 }
