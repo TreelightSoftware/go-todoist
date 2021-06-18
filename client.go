@@ -146,6 +146,11 @@ var endpoints = map[string]endpoint{
 		PathParams: map[string]string{},
 		Method:     http.MethodGet,
 	},
+	EndpointNameCreateTask: {
+		Path:       "/tasks",
+		PathParams: map[string]string{},
+		Method:     http.MethodPost,
+	},
 	EndpointNameGetTask: {
 		Path: "/tasks/:id",
 		PathParams: map[string]string{
@@ -175,10 +180,43 @@ var endpoints = map[string]endpoint{
 		Method: http.MethodPost,
 	},
 	EndpointNameReopenTask: {
-		Path: "/tasks/:id/close",
+		Path: "/tasks/:id/reopen",
 		PathParams: map[string]string{
 			"id": "The task id",
 		},
 		Method: http.MethodPost,
 	},
+}
+
+func Int64(in int64) *int64 {
+	return &in
+}
+
+func Int64Value(in *int64) int64 {
+	if in != nil {
+		return *in
+	}
+	return 0
+}
+
+func Bool(in bool) *bool {
+	return &in
+}
+
+func BoolValue(in *bool) bool {
+	if in != nil {
+		return *in
+	}
+	return false
+}
+
+func String(in string) *string {
+	return &in
+}
+
+func StringValue(in *string) string {
+	if in != nil {
+		return *in
+	}
+	return ""
 }

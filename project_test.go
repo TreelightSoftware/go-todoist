@@ -29,16 +29,20 @@ func TestGetProjects(t *testing.T) {
 	}
 	r := rand.Int63n(9999999)
 	projectName := fmt.Sprintf("My Test Project %d", r)
-	created, err := CreateProject(tokenToUse, &Project{
-		Name: projectName,
+	created, err := CreateProject(tokenToUse, &ProjectParams{
+		Name:  String(projectName),
+		Color: ColorLightBlue,
 	})
 	assert.Nil(t, err)
+	fmt.Printf("\n%+v\n", created)
 	assert.NotZero(t, created.ID)
 	assert.Equal(t, projectName, created.Name)
+	assert.Equal(t, ColorLightBlue, created.Color)
 	defer DeleteProject(tokenToUse, created.ID)
 
 	// get it in the list AND singularly
 	allProjects, err := GetAllProjects(tokenToUse)
+	fmt.Printf("\nALL\n%+v\n", allProjects)
 	assert.Nil(t, err)
 	foundInSlice := false
 	for i := range allProjects {
@@ -54,17 +58,17 @@ func TestGetProjects(t *testing.T) {
 	assert.Equal(t, created.Name, found.Name)
 
 	// change it a bit; since the Update call then chains to a Get, we don't need to re-get at this time
-	updateData := &Project{
-		Name:     fmt.Sprintf("Updated %d", r),
+	updateData := &ProjectParams{
+		Name:     String(fmt.Sprintf("Updated %d", r)),
 		Color:    ColorTaupe,
-		Favorite: true,
+		Favorite: Bool(true),
 	}
 	updated, err := UpdateProject(tokenToUse, created.ID, updateData)
 	assert.Nil(t, err)
 	require.NotNil(t, updated)
 	assert.Equal(t, created.ID, updated.ID)
 	assert.Equal(t, updateData.Color, updated.Color)
-	assert.Equal(t, updateData.Name, updated.Name)
+	assert.Equal(t, fmt.Sprintf("Updated %d", r), updated.Name)
 	assert.True(t, updated.Favorite)
 
 	err = DeleteProject("", created.ID)
