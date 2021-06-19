@@ -28,21 +28,36 @@ func TestGetProjects(t *testing.T) {
 		return
 	}
 	r := rand.Int63n(9999999)
+	// try to create a project with no name
+	bad, err := CreateProject(tokenToUse, nil)
+	assert.Nil(t, bad)
+	assert.NotNil(t, err)
+	bad, err = CreateProject(tokenToUse, &ProjectParams{
+		Name: nil,
+	})
+	assert.Nil(t, bad)
+	assert.NotNil(t, err)
+	bad, err = CreateProject(tokenToUse, &ProjectParams{
+		Name: String(""),
+	})
+	assert.Nil(t, bad)
+	assert.NotNil(t, err)
 	projectName := fmt.Sprintf("My Test Project %d", r)
 	created, err := CreateProject(tokenToUse, &ProjectParams{
 		Name:  String(projectName),
 		Color: ColorLightBlue,
 	})
 	assert.Nil(t, err)
-	fmt.Printf("\n%+v\n", created)
 	assert.NotZero(t, created.ID)
 	assert.Equal(t, projectName, created.Name)
 	assert.Equal(t, ColorLightBlue, created.Color)
 	defer DeleteProject(tokenToUse, created.ID)
 
 	// get it in the list AND singularly
-	allProjects, err := GetAllProjects(tokenToUse)
-	fmt.Printf("\nALL\n%+v\n", allProjects)
+	allProjects, err := GetAllProjects("a")
+	assert.NotNil(t, err)
+	assert.Zero(t, len(allProjects))
+	allProjects, err = GetAllProjects(tokenToUse)
 	assert.Nil(t, err)
 	foundInSlice := false
 	for i := range allProjects {
@@ -52,7 +67,10 @@ func TestGetProjects(t *testing.T) {
 		}
 	}
 	assert.True(t, foundInSlice)
-	found, err := GetProject(tokenToUse, created.ID)
+	found, err := GetProject(tokenToUse, -1)
+	assert.NotNil(t, err)
+	assert.Nil(t, found)
+	found, err = GetProject(tokenToUse, created.ID)
 	assert.Nil(t, err)
 	require.NotNil(t, found)
 	assert.Equal(t, created.Name, found.Name)
@@ -63,7 +81,13 @@ func TestGetProjects(t *testing.T) {
 		Color:    ColorTaupe,
 		Favorite: Bool(true),
 	}
-	updated, err := UpdateProject(tokenToUse, created.ID, updateData)
+	updated, err := UpdateProject(tokenToUse, -1, updateData)
+	assert.NotNil(t, err)
+	assert.Nil(t, updated)
+	updated, err = UpdateProject(tokenToUse, -1, nil)
+	assert.NotNil(t, err)
+	assert.Nil(t, updated)
+	updated, err = UpdateProject(tokenToUse, created.ID, updateData)
 	assert.Nil(t, err)
 	require.NotNil(t, updated)
 	assert.Equal(t, created.ID, updated.ID)
@@ -71,7 +95,9 @@ func TestGetProjects(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("Updated %d", r), updated.Name)
 	assert.True(t, updated.Favorite)
 
-	err = DeleteProject("", created.ID)
+	err = DeleteProject(tokenToUse, -1)
+	assert.NotNil(t, err)
+	err = DeleteProject(tokenToUse, created.ID)
 	assert.Nil(t, err)
 
 	// make sure it is gone

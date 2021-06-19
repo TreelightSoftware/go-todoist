@@ -37,6 +37,14 @@ func TestTaskCRUD(t *testing.T) {
 	r := rand.Int63n(999999)
 
 	// create a test task, find it, get it, update it, close it, reopen it, delete it
+	// first, a bad create without content
+	bad, err := CreateTask(tokenToUse, &TaskParams{})
+	assert.NotNil(t, err)
+	assert.Nil(t, bad)
+	bad, err = CreateTask(tokenToUse, nil)
+	assert.NotNil(t, err)
+	assert.Nil(t, bad)
+
 	createInput := &TaskParams{
 		Content:     String(fmt.Sprintf("My New Task %d", r)),
 		Description: String("Created from a unit test"),
@@ -64,7 +72,10 @@ func TestTaskCRUD(t *testing.T) {
 	}
 	assert.True(t, foundInSlice)
 
-	found, err := GetActiveTask(tokenToUse, created.ID)
+	found, err := GetActiveTask(tokenToUse, -1)
+	assert.NotNil(t, err)
+	require.Nil(t, found)
+	found, err = GetActiveTask(tokenToUse, created.ID)
 	assert.Nil(t, err)
 	require.NotNil(t, found)
 	assert.Equal(t, StringValue(createInput.Content), found.Content)
@@ -73,6 +84,11 @@ func TestTaskCRUD(t *testing.T) {
 	assert.Equal(t, PriorityUrgent, found.Priority)
 
 	// change some of the data, get it to make sure
+	_, err = UpdateTask(tokenToUse, -1, &TaskParams{})
+	assert.NotNil(t, err)
+	_, err = UpdateTask(tokenToUse, -1, nil)
+	assert.NotNil(t, err)
+
 	tomorrow := time.Now().AddDate(0, 0, 1).Format("2006-01-02T15:04:05Z")
 	updateData := &TaskParams{
 		Content:     String(fmt.Sprintf("Updated tasks %d", r)),
@@ -91,6 +107,8 @@ func TestTaskCRUD(t *testing.T) {
 	assert.Equal(t, PriorityUrgent, found.Priority)
 
 	// close it
+	err = CloseTask(tokenToUse, -1)
+	assert.NotNil(t, err)
 	err = CloseTask(tokenToUse, created.ID)
 	assert.Nil(t, err)
 	found, err = GetActiveTask(tokenToUse, created.ID)
@@ -98,9 +116,21 @@ func TestTaskCRUD(t *testing.T) {
 	assert.Nil(t, found)
 
 	// reopen it and get it
+	err = ReopenTask(tokenToUse, -1)
+	assert.NotNil(t, err)
 	err = ReopenTask(tokenToUse, created.ID)
 	assert.Nil(t, err)
 	found, err = GetActiveTask(tokenToUse, created.ID)
 	assert.Nil(t, err)
 	assert.NotNil(t, found)
+
+	// delete it, make sure it is gone
+	err = DeleteTask(tokenToUse, -1)
+	assert.NotNil(t, err)
+	err = DeleteTask(tokenToUse, created.ID)
+	assert.Nil(t, err)
+
+	found, err = GetActiveTask(tokenToUse, created.ID)
+	assert.NotNil(t, err)
+	assert.Nil(t, found)
 }
