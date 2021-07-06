@@ -65,11 +65,11 @@ The following API end points are provided by v1 of the Todoist API. If it has an
   - [X] Delete a Project
   - [ ] Get All Collaborators
 - Sections
-  - [ ] Get All Sections
-  - [ ] Create a New Section
-  - [ ] Get a Single Section
-  - [ ] Update a Section
-  - [ ] Delete a Section
+  - [X] Get All Sections
+  - [X] Create a New Section
+  - [X] Get a Single Section
+  - [X] Update a Section
+  - [X] Delete a Section
 - Tasks
   - [X] Get Active Tasks
   - [X] Create a New Task
@@ -85,8 +85,16 @@ The following API end points are provided by v1 of the Todoist API. If it has an
   - [ ] Update a Comment
   - [ ] Delete a Comment
 - Labels
-  - [ ] Get All Labels
-  - [ ] Create a New Label
-  - [ ] Get a Label
-  - [ ] Update a Label
-  - [ ] Delete a Label
+  - [X] Get All Labels
+  - [X] Create a New Label
+  - [X] Get a Label
+  - [X] Update a Label
+  - [X] Delete a Label
+- Webhooks
+  - [ ] Add function that takes HTTP request, parses it, and returns relevant information to the user
+
+### Other TODOs
+
+- [ ] Implement code coverage with dummy token in CI/CD
+- [ ] Improve error checking; for example, if a task's DueDatetime is set, make sure it includes the time component
+- [ ] Provide better documentation on usage
