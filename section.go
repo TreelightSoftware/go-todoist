@@ -17,7 +17,7 @@ type Section struct {
 
 // SectionParams are the fields used when creating or editing sections
 type SectionParams struct {
-	ProjectId *int64 `json:"project_id" db:"project_id"`
+	ProjectID *int64 `json:"project_id" db:"project_id"`
 	Name      string `json:"name" db:"name"`
 	Order     *int64 `json:"order" db:"order"`
 }
@@ -42,7 +42,7 @@ func CreateSection(token string, input *SectionParams) (*Section, error) {
 	if input == nil {
 		return nil, errors.New("you must provide a valid input with at least a name field and a project_id field")
 	}
-	if input.Name == "" || input.ProjectId == nil || Int64Value(input.ProjectId) == 0 {
+	if input.Name == "" || input.ProjectID == nil || Int64Value(input.ProjectID) == 0 {
 		return nil, errors.New("name and project_id are required")
 	}
 	resp, err := makeCall(token, EndpointNameCreateSection, map[string]string{}, input)

@@ -44,7 +44,7 @@ func TestSectionCRUD(t *testing.T) {
 	created, err = CreateSection(tokenToUse, params)
 	assert.Nil(t, created)
 	assert.NotNil(t, err)
-	params.ProjectId = Int64(project.ID)
+	params.ProjectID = Int64(project.ID)
 	created, err = CreateSection(tokenToUse, params)
 	assert.NotNil(t, created)
 	assert.Nil(t, err)
@@ -74,7 +74,7 @@ func TestSectionCRUD(t *testing.T) {
 	// update it, make sure it sticks
 	newName := "Updated section"
 	updated, err := UpdateSection(tokenToUse, section.ID, &SectionParams{
-		ProjectId: Int64(1), // should be ignored
+		ProjectID: Int64(1), // should be ignored
 		Name:      newName,
 	})
 	assert.Nil(t, err)
@@ -114,7 +114,7 @@ func TestTaskSectionAssignment(t *testing.T) {
 
 	name := fmt.Sprintf("Section %d", r)
 	params := &SectionParams{
-		ProjectId: Int64(project.ID),
+		ProjectID: Int64(project.ID),
 		Name:      name,
 	}
 	createdSection, err := CreateSection(tokenToUse, params)
