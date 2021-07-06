@@ -103,6 +103,22 @@ const (
 	EndpointNameUpdateTask        = "UpdateTask"
 	EndpointNameCloseTask         = "CloseTask"
 	EndpointNameReopenTask        = "ReopenTask"
+
+	// sections
+
+	EndpointNameGetAllSections = "GetAllSections"
+	EndpointNameGetSection     = "GetSection"
+	EndpointNameCreateSection  = "CreateSection"
+	EndpointNameUpdateSection  = "UpdateSection"
+	EndpointNameDeleteSection  = "DeleteSection"
+
+	// labels
+
+	EndpointNameGetAllLabels = "GetAllLabels"
+	EndpointNameGetLabel     = "GetLabel"
+	EndpointNameCreateLabel  = "CreateLabel"
+	EndpointNameUpdateLabel  = "UpdateLabel"
+	EndpointNameDeleteLabel  = "DeleteLabel"
 )
 
 // the endpoints that we implement are stored here for easier reference in the actual calls
@@ -185,6 +201,74 @@ var endpoints = map[string]endpoint{
 			"id": "The task id",
 		},
 		Method: http.MethodPost,
+	},
+
+	// sections
+
+	EndpointNameGetAllSections: {
+		Path:       "/sections",
+		PathParams: map[string]string{},
+		Method:     http.MethodGet,
+	},
+	EndpointNameCreateSection: {
+		Path:       "/sections",
+		PathParams: map[string]string{},
+		Method:     http.MethodPost,
+	},
+	EndpointNameGetSection: {
+		Path: "/sections/:id",
+		PathParams: map[string]string{
+			"id": "The section id",
+		},
+		Method: http.MethodGet,
+	},
+	EndpointNameUpdateSection: {
+		Path: "/sections/:id",
+		PathParams: map[string]string{
+			"id": "The section id",
+		},
+		Method: http.MethodPost,
+	},
+	EndpointNameDeleteSection: {
+		Path: "/sections/:id",
+		PathParams: map[string]string{
+			"id": "The section id",
+		},
+		Method: http.MethodDelete,
+	},
+
+	// labels
+
+	EndpointNameGetAllLabels: {
+		Path:       "/labels",
+		PathParams: map[string]string{},
+		Method:     http.MethodGet,
+	},
+	EndpointNameCreateLabel: {
+		Path:       "/labels",
+		PathParams: map[string]string{},
+		Method:     http.MethodPost,
+	},
+	EndpointNameGetLabel: {
+		Path: "/labels/:id",
+		PathParams: map[string]string{
+			"id": "The label id",
+		},
+		Method: http.MethodGet,
+	},
+	EndpointNameUpdateLabel: {
+		Path: "/labels/:id",
+		PathParams: map[string]string{
+			"id": "The label id",
+		},
+		Method: http.MethodPost,
+	},
+	EndpointNameDeleteLabel: {
+		Path: "/labels/:id",
+		PathParams: map[string]string{
+			"id": "The label id",
+		},
+		Method: http.MethodDelete,
 	},
 }
 

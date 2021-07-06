@@ -47,7 +47,7 @@ func GetAllProjects(token string) ([]Project, error) {
 // CreateProject creates a new project for the user. Tasks belong to projects and require, at a minimum, a name. https://developer.todoist.com/rest/v1/#create-a-new-project
 func CreateProject(token string, input *ProjectParams) (*Project, error) {
 	if input == nil {
-		return nil, errors.New("you must provide a valid project struct with at least a name field")
+		return nil, errors.New("you must provide a valid input with at least a name field")
 	}
 	if input.Name == nil {
 		return nil, errors.New("name is required")
@@ -83,10 +83,10 @@ func GetProject(token string, projectID int64) (*Project, error) {
 	return found, err
 }
 
-// UpdateProject updates a project. Currently, only name, color, and favorit are supported. https://developer.todoist.com/rest/v1/#update-a-project
+// UpdateProject updates a project. Currently, only name, color, and favorite are supported. https://developer.todoist.com/rest/v1/#update-a-project
 func UpdateProject(token string, projectID int64, params *ProjectParams) (*Project, error) {
 	if params == nil {
-		return nil, errors.New("you must pass in valid update data")
+		return nil, errors.New("you must pass in a valid input")
 	}
 	_, err := makeCall(token, EndpointNameUpdateProject, map[string]string{
 		"id": fmt.Sprintf("%d", projectID),
