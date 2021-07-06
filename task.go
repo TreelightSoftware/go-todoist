@@ -15,7 +15,7 @@ type Task struct {
 	Content      string      `json:"content" db:"content"`
 	Description  string      `json:"description" db:"description"`
 	Completed    bool        `json:"completed" db:"completed"`
-	LabelIDs     []string    `json:"label_ids" db:"label_ids"`
+	LabelIDs     []int64     `json:"label_ids" db:"label_ids"`
 	ParentID     int64       `json:"parent_id" db:"parent_id"`
 	Order        int64       `json:"order" db:"order"`
 	Priority     Priority    `json:"priority" db:"priority"`
@@ -37,19 +37,19 @@ type TaskDueInfo struct {
 
 // TaskParams are the fields you can set when creating or updating
 type TaskParams struct {
-	ProjectID    *int64    `json:"project_id,omitempty" db:"project_id"`
-	SectionID    *int64    `json:"section_id,omitempty" db:"section_id"`
-	Content      *string   `json:"content,omitempty" db:"content"`
-	Description  *string   `json:"description,omitempty" db:"description"`
-	Completed    *bool     `json:"completed,omitempty" db:"completed"`
-	LabelIDs     *[]string `json:"label_ids,omitempty" db:"label_ids"`
-	ParentID     *int64    `json:"parent_id,omitempty" db:"parent_id"`
-	Order        *int64    `json:"order,omitempty" db:"order"`
-	Priority     Priority  `json:"priority,omitempty" db:"priority"`
-	URL          *string   `json:"url,omitempty" db:"url"`
-	CommentCount *int64    `json:"comment_count,omitempty" db:"comment_count"`
-	Assignee     *int64    `json:"assignee,omitempty" db:"assignee"`
-	Assigner     *int64    `json:"assigner,omitempty" db:"assigner"`
+	ProjectID    *int64   `json:"project_id,omitempty" db:"project_id"`
+	SectionID    *int64   `json:"section_id,omitempty" db:"section_id"`
+	Content      *string  `json:"content,omitempty" db:"content"`
+	Description  *string  `json:"description,omitempty" db:"description"`
+	Completed    *bool    `json:"completed,omitempty" db:"completed"`
+	LabelIDs     *[]int64 `json:"label_ids,omitempty" db:"label_ids"`
+	ParentID     *int64   `json:"parent_id,omitempty" db:"parent_id"`
+	Order        *int64   `json:"order,omitempty" db:"order"`
+	Priority     Priority `json:"priority,omitempty" db:"priority"`
+	URL          *string  `json:"url,omitempty" db:"url"`
+	CommentCount *int64   `json:"comment_count,omitempty" db:"comment_count"`
+	Assignee     *int64   `json:"assignee,omitempty" db:"assignee"`
+	Assigner     *int64   `json:"assigner,omitempty" db:"assigner"`
 
 	// we lift the following up for the update and create calls
 	DueLang     *string `json:"due_lang" db:"due_lang"`
@@ -72,7 +72,7 @@ func GetActiveTasks(token string) ([]Task, error) {
 // CreateTask creates a returns a new task. The only required field is the content field. https://developer.todoist.com/rest/v1/#create-a-new-task
 func CreateTask(token string, input *TaskParams) (*Task, error) {
 	if input == nil {
-		return nil, errors.New("you must provide a valid task struct with at least a content field")
+		return nil, errors.New("you must provide a valid input with at least a content field")
 	}
 	if input.Content == nil || StringValue(input.Content) == "" {
 		return nil, errors.New("content is required")
@@ -102,7 +102,7 @@ func GetActiveTask(token string, taskID int64) (*Task, error) {
 // UpdateTask updates a task. https://developer.todoist.com/rest/v1/#update-a-task
 func UpdateTask(token string, taskID int64, newData *TaskParams) (*Task, error) {
 	if newData == nil {
-		return nil, errors.New("you must pass in valid update data")
+		return nil, errors.New("you must pass in a valid input")
 	}
 	_, err := makeCall(token, EndpointNameUpdateTask, map[string]string{
 		"id": fmt.Sprintf("%d", taskID),
